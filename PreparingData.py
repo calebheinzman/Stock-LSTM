@@ -4,11 +4,11 @@ import numpy as np
 
 
 # Load message data
-infile = open("Data.pkl", "rb")
+infile = open("Data/Data.pkl", "rb")
 messageData = pickle.load(infile)
 infile.close()
 #Load label Data
-infile = open("Labels.pkl", "rb")
+infile = open("Data/Labels.pkl", "rb")
 labelData = pickle.load(infile)
 infile.close()
 
@@ -43,16 +43,16 @@ trainingData = trainingData[0:trainingDataSize]
 
 
 # Write Training Data
-f = open('TrainingData.pkl','wb')
+f = open('Data/TrainingData.pkl','wb')
 pickle.dump(trainingData,f)
 f.close()
 
 #Write Validation Data
-f = open('ValidationData.pkl','wb')
+f = open('Data/ValidationData.pkl','wb')
 pickle.dump(validationData,f)
 f.close()
 
 #Write Testing Data
-f = open('TestingData.pkl','wb')
+f = open('Data/TestingData.pkl','wb')
 pickle.dump(testingData,f)
 f.close()

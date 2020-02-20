@@ -24,19 +24,19 @@ def main():
     best_prec1 = 0
 
     # Load Training Data
-    infile = open("FinalTrainingData.pkl", "rb")
+    infile = open("Data/FinalTrainingData.pkl", "rb")
     trainingData = pickle.load(infile)
     infile.close()
     # Load Labels
-    infile = open("FinalTrainingLabels.pkl", "rb")
+    infile = open("Data/FinalTrainingLabels.pkl", "rb")
     trainingLabels = pickle.load(infile)
     infile.close()
     # Load Training Data
-    infile = open("FinalValidationData.pkl", "rb")
+    infile = open("Data/FinalValidationData.pkl", "rb")
     validationData = pickle.load(infile)
     infile.close()
     # Load Labels
-    infile = open("FinalValidationLabels.pkl", "rb")
+    infile = open("Data/FinalValidationLabels.pkl", "rb")
     validationLabels = pickle.load(infile)
     infile.close()
 

@@ -2,13 +2,13 @@ import pickle
 import torch
 
 # Load training Data
-infile = open("TrainingData.pkl", "rb")
+infile = open("Data/TrainingData.pkl", "rb")
 trainingData = pickle.load(infile)
 infile.close()
 trainingLabels = []
 
 # Load Validation Data
-infile = open("ValidationData.pkl", "rb")
+infile = open("Data/ValidationData.pkl", "rb")
 validationData = pickle.load(infile)
 infile.close()
 validationLabels = []
@@ -53,14 +53,14 @@ f = open('FinalTrainingData.pkl','wb')
 pickle.dump(trainingData,f)
 f.close()
 # Write training Labels
-f = open('FinalTrainingLabels.pkl','wb')
+f = open('Data/FinalTrainingLabels.pkl','wb')
 pickle.dump(trainingLabels,f)
 f.close()
 # Write Validation Data
-f = open('FinalValidationData.pkl','wb')
+f = open('Data/FinalValidationData.pkl','wb')
 pickle.dump(validationData,f)
 f.close()
 # Write Validation Labels
-f = open('FinalValidationLabels.pkl','wb')
+f = open('Data/FinalValidationLabels.pkl','wb')
 pickle.dump(validationLabels,f)
 f.close()

@@ -19,7 +19,7 @@ class Model():
             self.model.cuda()  # rnn is your model
 
         # Initializing Loss and optimizer
-        self.loss_function = nn.CrossEntropyLoss().cuda()
+        self.loss_function = nn.CrossEntropyLoss()
         self.optimizer = optim.SGD(self.model.parameters(), lr=0.1, momentum=0.3)
         self.zero_count = 0
         self.one_count = 0
@@ -178,7 +178,7 @@ def accuracy(output, target, topk=(1,)):
     pred = pred.tolist()
     pred[0] = [int(x) for x in pred[0]]
     pred = torch.tensor(pred)
-    pred = pred.cuda()
+    pred = pred
     target = target.view(-1).long()
     correct = pred.eq(target.view(1, -1).expand_as(pred))
 
