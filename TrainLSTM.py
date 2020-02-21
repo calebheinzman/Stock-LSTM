@@ -14,11 +14,11 @@ import Model as m
 
 def main():
     # Parameters
-    RESUMEFROMCHECKPOINT = False;
+    RESUMEFROMCHECKPOINT = True;
     start_epoch = 0
     NUM_EPOCHS = 30000
-    EMBEDDING_DIM = 5
-    HIDDEN_DIM = 64
+    EMBEDDING_DIM = 25
+    HIDDEN_DIM = 128
     TARGET_DIM = 2
 
     best_prec1 = 0
@@ -44,7 +44,7 @@ def main():
 
     # If a checkpoint was made, continue from it
     if RESUMEFROMCHECKPOINT:
-        RESUMEPATH = 'runs\model_best.pth.tar'
+        RESUMEPATH = 'runs/model_best.pth.tar'
         if os.path.isfile(RESUMEPATH):
             print("=> loading checkpoint '{}'".format(RESUMEPATH))
             checkpoint = torch.load(RESUMEPATH)

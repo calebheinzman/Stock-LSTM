@@ -20,7 +20,7 @@ class Model():
 
         # Initializing Loss and optimizer
         self.loss_function = nn.CrossEntropyLoss()
-        self.optimizer = optim.SGD(self.model.parameters(), lr=0.1, momentum=0.3)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=0.001, momentum=.3)
         self.zero_count = 0
         self.one_count = 0
 
@@ -135,12 +135,9 @@ class Model():
             # Run our forward pass.
             output = self.model(sentence)
             # Compute the loss
-            print(sentence.size())
             _, pred = output.topk(max((1,)), 1, True, True)
             pred = pred.t()
             pred = pred.tolist()
-            print(pred)
-            print(target.tolist())
             loss = self.loss_function(output, target)
             # Measure accuracy and record loss
             prec1 = accuracy(output.data, target, topk=(1,))[0]
