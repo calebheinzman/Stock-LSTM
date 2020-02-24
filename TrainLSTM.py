@@ -49,19 +49,20 @@ def main():
         best_prec1 = 0
 
         # Load Training Data
-        infile = open("Data/FinalTrainingData.pkl", "rb")
+        data_path = 'Data/100D/'
+        infile = open(data_path+"FinalTrainingData.pkl", "rb")
         trainingData = pickle.load(infile)
         infile.close()
         # Load Labels
-        infile = open("Data/FinalTrainingLabels.pkl", "rb")
+        infile = open(data_path+"FinalTrainingLabels.pkl", "rb")
         trainingLabels = pickle.load(infile)
         infile.close()
         # Load Training Data
-        infile = open("Data/FinalValidationData.pkl", "rb")
+        infile = open(data_path+"FinalValidationData.pkl", "rb")
         validationData = pickle.load(infile)
         infile.close()
         # Load Labels
-        infile = open("Data/FinalValidationLabels.pkl", "rb")
+        infile = open(data_path+"FinalValidationLabels.pkl", "rb")
         validationLabels = pickle.load(infile)
         infile.close()
 

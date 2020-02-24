@@ -7,11 +7,11 @@ import random
 import numpy as np
 import torch
 
-infile = open("Data/DataDictionary.pkl", "rb")
+infile = open("Data/100D/DataDictionary.pkl", "rb")
 messageData = pickle.load(infile)
 infile.close()
 #Load label Data
-infile = open("Data/LabelsDictionary.pkl", "rb")
+infile = open("Data/100D/LabelsDictionary.pkl", "rb")
 labelData = pickle.load(infile)
 infile.close()
 
@@ -135,7 +135,7 @@ for i in range(0,testingData.__len__()):
     sentence = sentence.view(len(sentence), 1, -1)
     testingData[i] = sentence
 
-directory = 'Data/'
+directory = 'Data/100D/'
 if not os.path.exists(directory):
     os.makedirs(directory)
 
