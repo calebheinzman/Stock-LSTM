@@ -1,4 +1,5 @@
 # Load message data
+import os
 import pickle
 from datetime import datetime
 import random
@@ -37,6 +38,7 @@ messagesZero = messagesZero[0:classCount]
 
 # Convert to numpy array so that it can be shuffled
 messageDataOne = np.array(messagesOne)
+np.random.shuffle(messageDataOne)
 
 # Split training and testing data
 dataSizeOne = messageDataOne.size
@@ -51,6 +53,7 @@ trainingDataOne = trainingDataOne[0:trainingDataSizeOne]
 
 # Convert to numpy array so that it can be shuffled
 messageDataZero = np.array(messagesZero)
+np.random.shuffle(messageDataZero)
 
 # Split training and testing data
 dataSizeZero = messageDataZero.size
@@ -66,6 +69,8 @@ trainingDataZero = trainingDataZero[0:trainingDataSizeZero]
 trainingData = np.concatenate([trainingDataOne,trainingDataZero])
 validationData = np.concatenate([validationDataOne,validationDataZero])
 testingData = np.concatenate([testingDataOne,testingDataZero])
+
+
 np.random.shuffle(trainingData)
 np.random.shuffle(validationData)
 np.random.shuffle(testingData)
@@ -125,33 +130,36 @@ for i in range(0,testingData.__len__()):
     label = day[day.__len__()-1]
     # label = [max(float(0),float(x-0.01)) for x in label]
     label = [float(x) for x in label]
-    valLabels.append(torch.tensor(label))
+    testingLabels.append(torch.tensor(label))
     sentence = torch.tensor(sentence)
     sentence = sentence.view(len(sentence), 1, -1)
     testingData[i] = sentence
 
+directory = 'Data/'
+if not os.path.exists(directory):
+    os.makedirs(directory)
 
 # Write training data
-f = open('Data/FinalTrainingData.pkl','wb')
+f = open(directory+'FinalTrainingData.pkl','wb')
 pickle.dump(trainingData,f)
 f.close()
 # Write training Labels
-f = open('Data/FinalTrainingLabels.pkl','wb')
+f = open(directory+'FinalTrainingLabels.pkl','wb')
 pickle.dump(trainingLabels,f)
 f.close()
 # Write Validation Data
-f = open('Data/FinalValidationData.pkl','wb')
+f = open(directory+'FinalValidationData.pkl','wb')
 pickle.dump(validationData,f)
 f.close()
 # Write Validation Labels
-f = open('Data/FinalValidationLabels.pkl','wb')
+f = open(directory+'FinalValidationLabels.pkl','wb')
 pickle.dump(valLabels,f)
 f.close()
 # Write Validation Data
-f = open('Data/FinalTestingData.pkl','wb')
+f = open(directory+'FinalTestingData.pkl','wb')
 pickle.dump(testingData,f)
 f.close()
 # Write Validation Labels
-f = open('Data/FinalTestingLabels.pkl','wb')
+f = open(directory+'FinalTestingLabels.pkl','wb')
 pickle.dump(testingLabels,f)
 f.close()

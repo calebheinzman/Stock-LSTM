@@ -1,3 +1,4 @@
+import operator
 import os
 import pickle
 
@@ -9,18 +10,21 @@ import LSTM
 import time
 import AverageMeter
 
+# So far 0.1, 256, 0.4 has yielded the best results after 9 epochs (55% on test)
+# 63% on val for 200 glove embedding? Probably not close to accurate. Just got lucky
+
 class Model():
 
-    def __init__(self, EMBEDDING_DIM, HIDDEN_DIM, TARGET_DIM):
+    def __init__(self, embedding_dim, hddn_dim, targ_dim,dropout,lrn_rate,momentum, layers, isDense):
         # Create Model
-        self.model = LSTM.LSTM(EMBEDDING_DIM, HIDDEN_DIM, TARGET_DIM)
+        self.model = LSTM.LSTM(embedding_dim, hddn_dim, targ_dim,dropout,layers, isDense)
         # Load model to GPU if available
         if (torch.cuda.is_available()):
             self.model.cuda()  # rnn is your model
 
         # Initializing Loss and optimizer
         self.loss_function = nn.CrossEntropyLoss()
-        self.optimizer = optim.SGD(self.model.parameters(), lr=0.001, momentum=.3)
+        self.optimizer = optim.SGD(self.model.parameters(), lr=lrn_rate, momentum=momentum)
         self.zero_count = 0
         self.one_count = 0
 
@@ -35,6 +39,9 @@ class Model():
 
         # Keeps track of time
         end = time.time()
+
+        all_loss = []
+        all_accuracy = []
 
         # Loop through all data
         # print(self.model.lstm.all_weights[0][0][0])
@@ -70,8 +77,8 @@ class Model():
 
             # measure accuracy and record loss
             prec1 = accuracy(output.data, target, topk=(1,))[0]
-            losses.update(loss.data.item(), sentence.size(0))
-            top1.update(prec1.item(), sentence.size(0))
+            losses.update(loss.data.item(), 1)
+            top1.update(prec1.item(), 1)
 
             # Compute the gradients, and update the parameters by
             #  calling optimizer.step()
@@ -85,7 +92,6 @@ class Model():
             _, pred = output.topk(max((1,)), 1, True, True)
             pred = pred.t()
             pred = pred.tolist()
-            print('Predicted: ' + str(pred))
             # print('Target:____ ' + str(target.tolist()))
 
             # Measure elapsed time
@@ -98,7 +104,14 @@ class Model():
                       'Prec@1 {top1.val:.3f} ({top1.avg:.3f})'.format(
                     epoch, i, len(trainingData), batch_time=batch_time,
                     loss=losses, top1=top1))
+
+            all_loss.append(losses.val)
+            all_accuracy.append(top1.val/100)
+
+
         self.oldWeights = self.model.lstm.all_weights[0][0][0]
+
+        return[all_loss,all_accuracy]
 
 
         # Set single data point from date.
@@ -113,6 +126,17 @@ class Model():
 
         # switch to evaluate mode
         self.model.eval()
+
+        all_loss = []
+        all_accuracy = []
+
+        # confCount = 0
+        # correctConfCount = 0
+        # unConfCount = 0
+        # correctUnconfCount = 0
+        # wrongConfCount = 0
+        # correctCount = 0
+        # wrongCount = 0
 
         # Keeps track of time
         end = time.time()
@@ -134,15 +158,35 @@ class Model():
 
             # Run our forward pass.
             output = self.model(sentence)
+
+
             # Compute the loss
             _, pred = output.topk(max((1,)), 1, True, True)
             pred = pred.t()
             pred = pred.tolist()
             loss = self.loss_function(output, target)
+
+            # out = output.tolist()[0]
+            # prect, out = max(enumerate(out), key=operator.itemgetter(1))
+            # tar = target.tolist()[0]
+            # conf = 0.8
+            # if prect == tar:
+            #     if out > conf:
+            #         correctConfCount += 1
+            #     else:
+            #         unConfCount += 1
+            #     correctCount +=  1
+            # else:
+            #     if out > conf:
+            #         wrongConfCount += 1
+            #     wrongCount += 1
+
+
+
             # Measure accuracy and record loss
             prec1 = accuracy(output.data, target, topk=(1,))[0]
-            losses.update(loss.data.item(), sentence.size(0))
-            top1.update(prec1.item(), sentence.size(0))
+            losses.update(loss.data.item(), 1)
+            top1.update(prec1.item(), 1)
 
             targetTemp = target.tolist()[0]
             if targetTemp == 0:
@@ -161,7 +205,13 @@ class Model():
                     epoch, i, len(validationData), batch_time=batch_time,
                     loss=losses, top1=top1))
 
-        return top1.avg
+            all_loss.append(losses.val)
+            all_accuracy.append(top1.val / 100)
+
+        # ratioConf = (correctConfCount) / (wrongConfCount + correctConfCount)
+        # ratio = correctCount / (wrongCount + correctCount)
+
+        return [top1.avg, all_loss, all_accuracy]
 
 
 def accuracy(output, target, topk=(1,)):
